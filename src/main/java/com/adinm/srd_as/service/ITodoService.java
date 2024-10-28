@@ -16,4 +16,6 @@ public interface ITodoService {
 
     void deleteTodoById(Long id);
 
+    Todo updateTodoDoneStatus(Long id, boolean done);
+
 }

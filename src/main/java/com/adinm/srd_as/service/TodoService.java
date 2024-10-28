@@ -9,14 +9,11 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-
 @Service
 @RequiredArgsConstructor
 public class TodoService implements ITodoService {
 
-
     private final TodoRepository todoRepository;
-
 
     @Override
     public List<Todo> getAllTodos() {
@@ -46,17 +43,23 @@ public class TodoService implements ITodoService {
                 .orElse(null);
     }
 
-   
-
     @Override
     public void deleteTodoById(Long id) {
-        if (!todoRepository.existsById(id)){
+        if (!todoRepository.existsById(id)) {
             throw new RuntimeException("Todo not found");
         } else {
             todoRepository.deleteById(id);
         }
     }
 
-    
+    // New method to update only the "done" status
+    @Override
+    public Todo updateTodoDoneStatus(Long id, boolean done) {
+        return todoRepository.findById(id)
+                .map(todo -> {
+                    todo.setDone(done);
+                    return todoRepository.save(todo);
+                })
+                .orElseThrow(() -> new RuntimeException("Todo not found"));
+    }
 }
-
